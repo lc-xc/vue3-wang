@@ -1,0 +1,230 @@
+@import './base.css';
+
+html,body {
+  margin: 0px;
+  padding: 0px;
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+}
+
+.lc-flex-l-fs {
+  display: flex;
+}
+.lc-flex-l-c {
+  display: flex;
+  align-items: center;
+}
+.lc-flex-l-fe {
+  display: flex;
+  align-items: flex-end;
+}
+.lc-flex-r-fs {
+  display: flex;
+  justify-content: end;
+}
+.lc-flex-r-c {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+.lc-flex-r-fe {
+  display: flex;
+  justify-content: end;
+  align-items: flex-end;
+}
+.lc-flex-c-fs{
+  display: flex;
+  justify-content: center;
+}
+.lc-flex-c-c{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.lc-flex-c-fe{
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+.lc-flex-sa-c {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.lc-flex-sb-fs {
+  display: flex;
+  justify-content: space-between;
+}
+.lc-flex-sb-c {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.lc-flex-sb-fe {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.lc-flex-se-fs {
+  display: flex;
+  justify-content: space-evenly;
+}
+.lc-flex-se-c {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.lc-flex-se-fe {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-end;
+}
+.lc-flex2-l-se {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.lc-flex2-l-sb {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.lc-flex2-l-c {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.lc-flex2-l-fs {
+  display: flex;
+  flex-direction: column;
+}
+.lc-flex2-r-se {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: flex-end;
+}
+.lc-flex2-r-sb {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.lc-flex2-c-sb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+.lc-flex2-c-c {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.lc-flex2-c-se {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.lc-flex2-c-fs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+/* 省略号 */
+.lc-text-e {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* 定位 */
+.lc-pf {
+  position: fixed;
+}
+.lc-pa {
+  position: absolute;
+}
+.lc-pr {
+  position: relative;
+}
+.lc-ps {
+  position: static;
+}
+.lc-pu {
+  position: unset;
+}
+/* 背景 */
+.lc-bg-full {
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+/* 不换行 */
+.lc-wsn {
+  white-space: nowrap;
+}
+
+// 宽度
+.lc-w-full {
+  width: 100%;
+}
+// 间距
+.lc-m-l-10 {
+  margin-left: 10px;
+}
+.lc-m-l-5 {
+  margin-left: 5px;
+}
+
+
+/* 隐藏滚动条 */
+.lc-scrollbar-none::-webkit-scrollbar  { width: 0 !important }
+.lc-scrollbar-none {
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+/* 鼠标小手 */
+.lc-c-p {
+  cursor: pointer;
+}
+
+/* 显示几行 + 。。。 */
+.lc-line-2,.lc-line-3,.lc-line-4,.lc-line-5 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.lc-line-3 {
+  -webkit-line-clamp: 3;
+}
+.lc-line-4 {
+  -webkit-line-clamp: 4;
+}
+.lc-line-5 {
+  -webkit-line-clamp: 5;
+}
+
+/* @media (hover: hover) {
+  a:hover {
+    background-color: hsla(160, 100%, 37%, 0.2);
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    display: flex;
+    place-items: center;
+  }
+
+  #app {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0 2rem;
+  }
+} */
