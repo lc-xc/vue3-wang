@@ -1,10 +1,11 @@
 <script setup>
 import WorkArea from '@/views/workArea/WorkArea.vue'
+import ToolArea from '@/views/toolArea/ToolArea.vue'
 </script>
 
 <template>
   <div class="workbench">
-    <app-drawer></app-drawer>
+    <tool-area></tool-area>
     <work-area></work-area>
   </div>
 </template>
