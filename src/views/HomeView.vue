@@ -1,6 +1,6 @@
 <script setup>
 import WorkArea from '@/views/workArea/WorkArea.vue'
-import ToolArea from '@/views/toolArea/ToolArea.vue'
+import ToolArea from '@/views/areaTool/ToolArea.vue'
 </script>
 
 <template>
