@@ -9,6 +9,9 @@ import {
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
+import fs from 'fs'
+import path from 'path'
+
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -26,9 +29,16 @@ export default defineConfig({
   // 开发环境的配置
   server: {
     hmr: true, // 启用热更新
-    port: 5173, // 开发端口号
+    port: 9991, // 开发端口号
     host: true, // 指定本机ip作为服务地址
-    https: true,
+    https: {
+      key: fs.readFileSync(path.resolve(__dirname, 'https_ssl/localhost-key.pem')),
+      // 'https_ssl/localhost.pem' 为第四步生产localhost.pem文件的位置
+      cert: fs.readFileSync(path.resolve(__dirname, 'https_ssl/localhost.pem'))
+      // 明确支持 TLS 1.2/1.3
+      // minVersion: 'TLSv1.2',
+      // maxVersion: 'TLSv1.3'
+    },
     open: false, // 自动打开默认浏览器
     proxy: { // 接口代理
       // '/backendName': {
