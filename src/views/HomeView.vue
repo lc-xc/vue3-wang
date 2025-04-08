@@ -1,6 +1,7 @@
 <script setup>
 import WorkArea from '@/views/workArea/WorkArea.vue'
 import ToolArea from '@/views/areaTool/ToolArea.vue'
+// import { ref } from 'vue';
 </script>
 
 <template>
