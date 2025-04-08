@@ -80,6 +80,7 @@ export default {
 
       try {
         this.isLoading = true
+        console.log('开始识别图片', file);
         this.previewImage = URL.createObjectURL(file[0])
 
         // 初始化扫描器（单例模式）
@@ -313,7 +314,7 @@ export default {
   mounted () {
     // this.isXiaomiPhone()
     this.cameras = []
-    this.initScan()
+    // this.initScan()
   },
   // beforeDestroy () {
   //   this.stopScan()
