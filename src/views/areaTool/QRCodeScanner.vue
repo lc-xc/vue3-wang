@@ -1,18 +1,37 @@
 <template>
-  <div>
+  <div class="area-qrcode">
     <!-- 摄像头显示区域 -->
     <div id="scanner-container" ref="scanner"></div>
     <!-- 识别结果显示 -->
-    <div v-if="result" class="result">{{ result }}</div>
+    <!-- <div v-if="result" class="result">{{ result }}</div> -->
+    <!-- 操作按钮、提示相关展示 -->
+    <div class="controls">
+      <div class="scanning-box"><div class="line"></div></div>
+      <div class="tip" @click="toggleTorch">请将条形码放入扫描框内<br/>耐心等待对焦识别</div>
+      <div class="btns">
+        <!-- <div @click="toggleTorch"><i class="icon el-icon-s-opportunity"></i></div> -->
+         <div @click="toggleTorch">
+          <img src="@/assets/d.svg" :style="!flag && 'opacity: 0.6;'">
+         </div>
+        <!-- <div><i class="icon el-icon-picture"></i></div> -->
+        <div>
+          <van-uploader v-model="fileList" reupload max-count="1" :after-read="afterRead" :preview-image="false">
+            <van-icon class="icon" name="photo" />
+          </van-uploader>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
-// import { BrowserMultiFormatReader } from '@zxing/library';
+import { showNotify } from 'vant';
 import Quagga from 'quagga';
 export default {
   name: 'QRCodeScanner',
   data() {
-    return { result: '' };
+    return {
+      flag: false
+    };
   },
   mounted() {
     this.initScanner();
@@ -21,6 +40,28 @@ export default {
     Quagga.stop();  // 销毁时关闭摄像头
   },
   methods: {
+    afterRead(file) {
+      // 此时可以自行将文件上传至服务器
+      console.log(file);
+      console.log('开始识别图片', file, file.file, file.objectUrl);
+      this.analyzeImage(file.objectUrl)
+    },
+    /**
+     * 切换闪光灯
+     */
+    toggleTorch () {
+      const track = Quagga.CameraAccess.getActiveTrack();
+      if (track && track.getCapabilities().torch) {
+        this.flag = !this.flag
+        track.applyConstraints({ advanced: [{ torch: !track.getSettings().torch }] })
+          .catch(console.error);
+      } else {
+        console.log('设备不支持闪光灯控制');
+      }
+    },
+    /**
+     * 初始化摄像头
+     */
     initScanner() {
       Quagga.init({
         inputStream: {
@@ -41,27 +82,38 @@ export default {
       }, (err) => {
         if (err) {
           console.error("摄像头初始化失败:", err);
+          // this.$emit('error', "摄像头初始化失败！", err)
           return;
         }
         Quagga.start();
         this.bindDetectEvent();
       });
     },
+    /**
+     * 绑定识别事件
+     */
     bindDetectEvent() {
       Quagga.onDetected((result) => {
         if (result.codeResult) {
           this.result = result.codeResult.code;
           console.warn('Quagga scan 识别成功：', this.result);
-          alert('识别成功: ' +  this.result)
+          this.$emit('success', this.result)
           Quagga.stop();  // 识别成功后停止扫描
         } else {
           console.warn('Quagga scan 识别失败：', result);
+          this.$emit('error', "识别失败！", result)
         }
       });
       Quagga.onProcessed((data) => {
-        if (data && data.boxes) console.log("检测到条码区域");
+        if (data && data.boxes) {
+          console.log("检测到条码区域：", data.boxes);
+        }
       });
     },
+    /**
+     * 分析图片中的条码
+     * @param {string} imageUrl 图片URL
+     */
     analyzeImage(imageUrl) {
       Quagga.decodeSingle({
         decoder: {
@@ -72,36 +124,105 @@ export default {
       }, (result) => {
         if (result && result.codeResult) {
           this.result = result.codeResult.code;
+          this.$emit('success', this.result)
           URL.revokeObjectURL(imageUrl); // 释放资源
         } else {
-          this.result = '识别失败';
+          console.error('识别图片中的条码失败:', result);
+          this.result = '识别图片中的条码失败';
+          showNotify({ type: 'warning', duration: 5000, message: '解析图片失败，请选择近距离拍摄、条码清晰的图片。' });
         }
       });
     },
-    // async initScanner() {
-      // try {
-      //   // 获取摄像头设备列表，优先选择后置摄像头（设备名含 "back" 关键字）‌:ml-citation{ref="3,4" data="citationList"}
-      //   const devices = await this.codeReader.getVideoInputDevices();
-      //   this.selectedDeviceId = devices.find(device =>
-      //     device.label.toLowerCase().includes('back')
-      //   )?.deviceId || devices?.deviceId;
-      //   console.log('devices:', devices, this.selectedDeviceId);
-      //   this.selectedDeviceId = devices[1]?.deviceId;
-      //   if (this.selectedDeviceId) {
-      //     // 启动摄像头并开始解码 ‌:ml-citation{ref="2,3" data="citationList"}
-      //     this.codeReader.decodeFromVideoDevice(
-      //       this.selectedDeviceId,
-      //       this.videoId,
-      //       (result, error) => {
-      //         if (result) this.$emit('scan-success', result.text);
-      //         if (error) this.$emit('scan-error', error);
-      //       }
-      //     );
-      //   }
-      // } catch (error) {
-      //   console.error('摄像头初始化失败:', error);  // 处理权限或设备异常 ‌:ml-citation{ref="3,5" data="citationList"}
-      // }
-    // }
+    test () {
+      location.refresh()
+    }
   }
 };
 </script>
+<style lang="scss" scoped>
+.area-qrcode {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0);
+  width: 100vw;
+  height: 100vh;
+  .controls {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: calc(100% - 50px);
+    // border: 2px solid red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .scanning-box {
+      width: 260px;
+      height: 300px;
+      overflow: hidden;
+      .line {
+        width: 100%;
+        height: 3px;
+        border-radius: 20px 20px 0px 0px;
+        background: linear-gradient(
+          to bottom, 
+          transparent, 
+          #3dbaeb 50%, 
+          transparent
+        ); /* 渐变实现两端淡出效果 */
+        animation: scan 2s infinite linear;
+        box-shadow: 0px -4px 6px 1px #3dbaeb; /* 添加发光效果 */  
+      }
+    }
+    .tip {
+      position: absolute;
+      bottom: 50px;
+      left: 0px;
+      width: 100%;
+      color: #fff;
+      font-size: 16px;
+      text-align: center;
+    }
+    .btns {
+      position: absolute;
+      bottom: -10px;
+      left: 0px;
+      width: 100%;
+      color: #fff;
+      font-size: 16px;
+      text-align: center;
+      height: 30px;
+      display: flex;
+      justify-content: space-between;
+      padding: 0px 30px;
+      div {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #c2c2c271;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .icon {
+          color: #ffffff;
+          font-size: 25px;
+        }
+        img {
+          height: 30px;
+        }
+      }
+    }
+  }
+}
+@keyframes scan {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(300px); /* 移动距离等于容器高度 */
+  }
+}
+</style>

@@ -1,9 +1,8 @@
 <script setup>
 import Html5Qrcode from './Html5Qrcode.vue'
-import QRCodeScanner from '@/views/areaTool/QRCodeScanner.vue';
-import { onMounted, ref } from 'vue';
-onMounted(() => {
-});
+import QRCodeScanner from '@/views/areaTool/QRCodeScanner.vue'
+import { onMounted, ref } from 'vue'
+onMounted(() => {})
 const saoyisao = () => {
   html5QrcodeFlag.value = true
   text.value = ''
@@ -25,23 +24,34 @@ const error = (msg, err) => {
   console.error(err)
   text.value = '扫描失败1：' + msg
 }
-const scanResult = ref('');
+const scanResult = ref('')
 const handleScanSuccess = (result) => {
-  text.value = '扫描成功2：' + result
+  text.value = '扫描成功：' + result
   QRCodeScannerFlag.value = false
 }
 const handleScanError = (error) => {
-  text.value = '扫描失败2：' + error
+  text.value = '扫描失败：' + error
   QRCodeScannerFlag.value = false
 }
 </script>
 <template>
   <div class="dw-w-full">
-    <div class="saoyisao" @click="saoyisao">打开扫一扫【1】</div>
-    <div class="saoyisao" @click="saoyisao2">打开扫一扫【2】</div>
-    <html5-qrcode v-if="html5QrcodeFlag" tip="提示：请扫描药盒一侧“商品码”或“追溯码”" @success='success' @error="error" definition :readers='["code_128_reader", "ean_reader"]'></html5-qrcode>
-    <QRCodeScanner v-if="QRCodeScannerFlag" @scan-success="handleScanSuccess" @scan-error="handleScanError" />
-    <div style="color: #fff;font-size: 15px;">{{ text }}</div>
+    <!-- <div class="saoyisao" @click="saoyisao">打开扫一扫【1】</div> -->
+    <div class="saoyisao" @click="saoyisao2">打开扫一扫</div>
+    <html5-qrcode
+      v-if="html5QrcodeFlag"
+      tip="提示：请扫描药盒一侧“商品码”或“追溯码”"
+      @success="success"
+      @error="error"
+      definition
+      :readers="['code_128_reader', 'ean_reader']"
+    ></html5-qrcode>
+    <QRCodeScanner
+      v-if="QRCodeScannerFlag"
+      @success="handleScanSuccess"
+      @error="handleScanError"
+    />
+    <div style="color: green; font-size: 25px;font-weight: bold;">{{ text }}</div>
   </div>
 </template>
 <style lang="scss" scoped>
